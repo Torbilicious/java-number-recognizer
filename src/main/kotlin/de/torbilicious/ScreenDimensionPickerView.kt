@@ -3,7 +3,6 @@ package de.torbilicious
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.image.Image
-import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
 import jfxtras.labs.util.event.MouseControlUtil
@@ -17,7 +16,6 @@ import java.awt.Rectangle as AwtRectangle
 
 class ScreenDimensionPickerView : View() {
     override val root: BorderPane = BorderPane()
-    private var screenShotView: ImageView by singleAssign()
 
     private val rectangle = javafx.scene.shape.Rectangle()
     private val buttonDisabledProperty = SimpleBooleanProperty(true)
@@ -28,7 +26,6 @@ class ScreenDimensionPickerView : View() {
     private val shownImageHeigth = 720.0
 
     init {
-        val screenshotFile = captureScreenshot()
 
         detectedTextProperty.onChange {
             println("New text: $it")
@@ -40,9 +37,9 @@ class ScreenDimensionPickerView : View() {
             }
 
             center {
-                screenShotView = imageview(
+                imageview(
                     Image(
-                        screenshotFile.inputStream(),
+                        captureScreenshot().inputStream(),
                         shownImageWidth,
                         shownImageHeigth,
                         false,
@@ -59,9 +56,7 @@ class ScreenDimensionPickerView : View() {
                         action {
                             println("Picked: $rectangle")
 
-                            val screenshotOfSelectedArea = captureScreenshot(
-                                rectangle.toAwtRectangle()
-                            )
+                            val screenshotOfSelectedArea = captureScreenshot(rectangle.toAwtRectangle())
 
                             println(screenshotOfSelectedArea.canonicalPath)
 
